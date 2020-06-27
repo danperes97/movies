@@ -5,6 +5,7 @@ import com.donus.movies.model.Movie;
 import com.donus.movies.model.Person;
 import com.donus.movies.model.dto.MovieDTO;
 import com.donus.movies.model.exception.AlreadyExistsException;
+import com.donus.movies.model.exception.CreationObjectNotFoundException;
 import com.donus.movies.model.exception.ObjectNotFoundException;
 import com.donus.movies.model.repository.MoviesRepository;
 import com.donus.movies.model.repository.PeopleRepository;
@@ -41,10 +42,10 @@ public class MoviesService {
     if (movieRequest.getCast() != null && movieRequest.getCast().size() >= 10) throw new ValidationException("Cast too big, the max limit is: 10");
 
     List<Person> cast = movieRequest.getCast().stream().map(id ->
-      peopleRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException("Person not found:" + id))
+      peopleRepository.findById(id).orElseThrow(() -> new CreationObjectNotFoundException("Person not found:" + id))
     ).collect(Collectors.toList());
 
-    Person director = peopleRepository.findById(movieRequest.getDirectorId()).orElseThrow(() -> new ObjectNotFoundException("Person not found!"));
+    Person director = peopleRepository.findById(movieRequest.getDirectorId()).orElseThrow(() -> new CreationObjectNotFoundException("Person not found!"));
 
     Movie movie = new Movie();
     movie.setTitle(movieRequest.getTitle());
@@ -58,6 +59,12 @@ public class MoviesService {
 
   public Optional<MovieDTO> findMovieByName(String title) {
     return repository.findByTitle(title).map(MovieDTO::create);
+  }
+
+  public MovieDTO findMovieById(Long id) {
+    return repository.findById(id)
+        .map(MovieDTO::create)
+        .orElseThrow(() -> new ObjectNotFoundException("Movie not found!"));
   }
 
   private List<MovieDTO> listToMovieDTO(List<Movie> movies) {

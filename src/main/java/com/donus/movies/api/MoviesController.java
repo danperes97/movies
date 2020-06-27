@@ -23,6 +23,11 @@ public class MoviesController {
     return ResponseEntity.ok(service.getMovies(censured));
   }
 
+  @GetMapping("/{id}")
+    public ResponseEntity get(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(service.findMovieById(id));
+    }
+
   @PostMapping
   public ResponseEntity post(@RequestBody MovieRequest movie) {
     MovieDTO movieSaved = service.save(movie);

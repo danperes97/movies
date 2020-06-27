@@ -1,25 +1,22 @@
 package com.donus.movies.service;
 
 import com.donus.movies.api.request.MovieRequest;
-import com.donus.movies.model.Movie;
 import com.donus.movies.model.Person;
 import com.donus.movies.model.dto.MovieDTO;
 import com.donus.movies.model.repository.PeopleRepository;
-import jdk.internal.net.http.common.Pair;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
-
 import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @RunWith(SpringRunner.class)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @SpringBootTest
 public class MovieServiceTest {
   @Autowired
@@ -28,7 +25,7 @@ public class MovieServiceTest {
   @Autowired
 	private PeopleRepository peopleRepository;
 
-  private MovieRequest setupMovie(String movieName){
+  public MovieRequest setupMovie(String movieName){
 		peopleRepository.save(new Person("Chris Evans"));
 		peopleRepository.save(new Person("Robert Downey Jr"));
 
