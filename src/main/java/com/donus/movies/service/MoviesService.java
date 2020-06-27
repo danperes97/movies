@@ -57,8 +57,8 @@ public class MoviesService {
     return movie;
   }
 
-  public Optional<MovieDTO> findMovieByName(String title) {
-    return repository.findByTitle(title).map(MovieDTO::create);
+  public Optional<Movie> findMovieByName(String title) {
+    return repository.findByTitle(title);
   }
 
   public MovieDTO findMovieById(Long id) {

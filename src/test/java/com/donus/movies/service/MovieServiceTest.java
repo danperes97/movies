@@ -1,8 +1,10 @@
 package com.donus.movies.service;
 
 import com.donus.movies.api.request.MovieRequest;
+import com.donus.movies.model.Movie;
 import com.donus.movies.model.Person;
 import com.donus.movies.model.dto.MovieDTO;
+import com.donus.movies.model.exception.AlreadyExistsException;
 import com.donus.movies.model.repository.PeopleRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,7 +15,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @RunWith(SpringRunner.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -45,10 +49,21 @@ public class MovieServiceTest {
 
 		moviesService.save(movieRequest);
 
-	  Optional<MovieDTO> movie = moviesService.findMovieByName(movieRequest.getTitle());
+	  Optional<Movie> movie = moviesService.findMovieByName(movieRequest.getTitle());
 	  assertEquals(movieRequest.getTitle(), movie.get().getTitle());
-//	assertEquals(movieRequest.getDirectorId(), movie.get().getDirector().getId());
+//	assertEquals(movieRequest.getDirectorId(), movie.getDirector().getId());
 		assertEquals(movieRequest.getCensured(), movie.get().getCensured());
 		assertEquals(movieRequest.getReleaseDate(), movie.get().getReleaseDate());
+  }
+
+  @Test
+	public void createWithSameTitleMovieTest() {
+  	MovieRequest movieRequest = setupMovie("Avengers");
+  	MovieRequest movie2Request = setupMovie("Avengers");
+
+		moviesService.save(movieRequest);
+		assertThrows(AlreadyExistsException.class, () -> {
+			moviesService.save(movie2Request);
+		});
   }
 }
