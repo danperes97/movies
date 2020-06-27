@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/movies")
@@ -18,8 +19,8 @@ public class MoviesController {
   private MoviesService service;
 
   @GetMapping
-  public ResponseEntity<List<MovieDTO>> index() {
-    return ResponseEntity.ok(service.getMovies());
+  public ResponseEntity<List<MovieDTO>> index(@RequestParam Optional<Boolean> censured) {
+    return ResponseEntity.ok(service.getMovies(censured));
   }
 
   @PostMapping

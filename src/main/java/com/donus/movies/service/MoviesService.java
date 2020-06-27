@@ -11,7 +11,6 @@ import com.donus.movies.model.repository.PeopleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.donus.movies.model.exception.ValidationException;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -24,8 +23,8 @@ public class MoviesService {
   @Autowired
   private PeopleRepository peopleRepository;
 
-  public List<MovieDTO> getMovies() {
-    return listToMovieDTO(repository.findAll());
+  public List<MovieDTO> getMovies(Optional<Boolean> censured) {
+     return listToMovieDTO(repository.searchBy(censured));
   }
 
   public MovieDTO save(MovieRequest movieRequest) {
