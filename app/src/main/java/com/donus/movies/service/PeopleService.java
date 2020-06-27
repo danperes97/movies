@@ -7,6 +7,7 @@ import com.donus.movies.model.exception.ObjectNotFoundException;
 import com.donus.movies.model.repository.PeopleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import javax.persistence.Id;
 import java.util.List;
@@ -36,6 +37,21 @@ public class PeopleService {
 
   private Optional<PersonDTO> findPersonByName(String name) {
     return repository.findByName(name).map(PersonDTO::create);
+  }
+
+  public PersonDTO update(Long id, Person personRequest) {
+    Assert.notNull(id, "Not possible update the registry");
+
+    return repository.findById(id).map(person -> {
+      person.setName(personRequest.getName());
+
+      repository.save(person);
+      return PersonDTO.create(person);
+    }).orElseThrow(() -> new RuntimeException("Not possible update the registry"));
+  }
+
+  public void deletePersonById(Long id) {
+    repository.deleteById(id);
   }
 
   public PersonDTO findPersonById(Long id) {

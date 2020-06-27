@@ -38,4 +38,15 @@ public class PeopleController {
     return ServletUriComponentsBuilder
         .fromCurrentRequest().path("/{id}").buildAndExpand(id).toUri();
   }
+
+  @PutMapping("/{id}")
+  public ResponseEntity put(@PathVariable("id") Long id, @RequestBody Person person) {
+    return ResponseEntity.ok(service.update(id, person));
+  }
+
+  @DeleteMapping("/{id}")
+  public ResponseEntity delete(@PathVariable("id") Long id) {
+    service.deletePersonById(id);
+    return ResponseEntity.ok().build();
+  }
 }

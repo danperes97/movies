@@ -40,4 +40,15 @@ public class MoviesController {
     return ServletUriComponentsBuilder
         .fromCurrentRequest().path("/{id}").buildAndExpand(id).toUri();
   }
+
+  @PutMapping("/{id}")
+  public ResponseEntity put(@PathVariable("id") Long id, @RequestBody MovieRequest movieRequest) {
+    return ResponseEntity.ok(service.update(id, movieRequest));
+  }
+
+  @DeleteMapping("/{id}")
+  public ResponseEntity delete(@PathVariable("id") Long id) {
+    service.deleteMovieById(id);
+    return ResponseEntity.ok().build();
+  }
 }

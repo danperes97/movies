@@ -12,6 +12,8 @@ import com.donus.movies.model.repository.PeopleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.donus.movies.model.exception.ValidationException;
+import org.springframework.util.Assert;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -41,20 +43,24 @@ public class MoviesService {
   private Movie movieRequestToMovie(MovieRequest movieRequest) {
     if (movieRequest.getCast() != null && movieRequest.getCast().size() >= 10) throw new ValidationException("Cast too big, the max limit is: 10");
 
-    List<Person> cast = movieRequest.getCast().stream().map(id ->
-      peopleRepository.findById(id).orElseThrow(() -> new CreationObjectNotFoundException("Person not found:" + id))
-    ).collect(Collectors.toList());
+    return movieRequest.toMovie();
+  }
 
-    Person director = peopleRepository.findById(movieRequest.getDirectorId()).orElseThrow(() -> new CreationObjectNotFoundException("Person not found!"));
+  public MovieDTO update(Long id, MovieRequest movieRequest) {
+    Assert.notNull(id, "Not possible update the registry");
 
-    Movie movie = new Movie();
-    movie.setTitle(movieRequest.getTitle());
-    movie.setReleaseDate(movieRequest.getReleaseDate());
-    movie.setCensured(movieRequest.getCensured());
-//    movie.setDirector(director);
-//    movie.setCast(cast);
+    return repository.findById(id).map(movie -> {
+      movie.setTitle(movieRequest.getTitle());
+      movie.setReleaseDate(movieRequest.getReleaseDate());
+      movie.setCensured(movieRequest.getCensured());
 
-    return movie;
+      repository.save(movie);
+      return MovieDTO.create(movie);
+    }).orElseThrow(() -> new RuntimeException("Not possible update the registry"));
+  }
+
+  public void deleteMovieById(Long id) {
+    repository.deleteById(id);
   }
 
   public Optional<Movie> findMovieByName(String title) {
