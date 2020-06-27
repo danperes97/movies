@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  spring-boot:
+    image: donus/movies-app
+    ports:
+      - "8080:8080"
+    expose:
+      - "8080"
+    depends_on:
+      - docker-mysql
+  docker-mysql:
+    restart: always
+    container_name: docker-mysql
+    image: mysql
+    environment:
+      MYSQL_DATABASE: movies
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_HOST: '%'
+    volumes:
+      - ./sql:/docker-entrypoint-initdb.d
+
+    ports:
+      - "6033:3306"
+    healthcheck:
+      test: "/usr/bin/mysql --user=root --password=root--execute \"SHOW DATABASES;\""
+      interval: 2s
+      timeout: 20s
+      retries: 10
