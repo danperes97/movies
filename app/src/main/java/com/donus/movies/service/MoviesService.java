@@ -41,8 +41,6 @@ public class MoviesService {
   }
 
   private Movie movieRequestToMovie(MovieRequest movieRequest) {
-    if (movieRequest.getCast() != null && movieRequest.getCast().size() >= 10) throw new ValidationException("Cast too big, the max limit is: 10");
-
     return movieRequest.toMovie();
   }
 

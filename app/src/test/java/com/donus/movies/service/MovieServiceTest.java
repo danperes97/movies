@@ -34,9 +34,9 @@ public class MovieServiceTest {
 		peopleRepository.save(new Person("Robert Downey Jr"));
 
 		MovieRequest movieRequest = new MovieRequest();
-    movieRequest.setCast(Arrays.asList(1L, 2L));
+//    movieRequest.setCast(Arrays.asList(1L, 2L));
     movieRequest.setCensured(false);
-    movieRequest.setDirectorId(1L);
+//    movieRequest.setDirectorId(1L);
     movieRequest.setTitle(movieName);
     movieRequest.setReleaseDate(new Date());
 
