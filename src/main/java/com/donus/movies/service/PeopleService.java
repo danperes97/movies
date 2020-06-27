@@ -3,6 +3,7 @@ package com.donus.movies.service;
 import com.donus.movies.model.Person;
 import com.donus.movies.model.dto.PersonDTO;
 import com.donus.movies.model.exception.AlreadyExistsException;
+import com.donus.movies.model.exception.ObjectNotFoundException;
 import com.donus.movies.model.repository.PeopleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,6 +36,12 @@ public class PeopleService {
 
   private Optional<PersonDTO> findPersonByName(String name) {
     return repository.findByName(name).map(PersonDTO::create);
+  }
+
+  public PersonDTO findPersonById(Long id) {
+    return repository.findById(id)
+        .map(PersonDTO::create)
+        .orElseThrow(() -> new ObjectNotFoundException("Person not found!"));
   }
 
   private List<PersonDTO> listToPersonDTO(List<Person> people) {
