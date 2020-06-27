@@ -1,7 +1,9 @@
 package com.donus.movies.api.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.sun.istack.NotNull;
 import lombok.Data;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -16,7 +18,8 @@ public class MovieRequest {
 
   private Boolean censured;
 
+  @NotNull
   private Long directorId;
 
-  private List<Long> cast;
+  private List<Long> cast = Arrays.asList();
 }

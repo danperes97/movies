@@ -24,7 +24,7 @@ public class Movie {
   private Boolean censured;
 
   @OneToOne(cascade = CascadeType.ALL)
-  @JoinColumn(name = "person_id", referencedColumnName = "id")
+  @JoinColumn(name = "person_id")
   private Person director;
 
   @Column

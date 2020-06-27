@@ -38,7 +38,7 @@ public class MoviesService {
   }
 
   private Movie movieRequestToMovie(MovieRequest movieRequest) {
-    if (movieRequest.getCast().size() >= 10) throw new ValidationException("Cast too big, the max limit is: 10");
+    if (movieRequest.getCast() != null && movieRequest.getCast().size() >= 10) throw new ValidationException("Cast too big, the max limit is: 10");
 
     List<Person> cast = movieRequest.getCast().stream().map(id ->
       peopleRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException("Person not found:" + id))
@@ -50,13 +50,13 @@ public class MoviesService {
     movie.setTitle(movieRequest.getTitle());
     movie.setReleaseDate(movieRequest.getReleaseDate());
     movie.setCensured(movieRequest.getCensured());
-    movie.setDirector(director);
-    movie.setCast(cast);
+//    movie.setDirector(director);
+//    movie.setCast(cast);
 
     return movie;
   }
 
-  private Optional<MovieDTO> findMovieByName(String title) {
+  public Optional<MovieDTO> findMovieByName(String title) {
     return repository.findByTitle(title).map(MovieDTO::create);
   }
 
