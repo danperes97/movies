@@ -4,7 +4,7 @@ This is an application written in Java, using Spring Boot. All application is do
 
 ## Architeture
 
-![Architeture](diagramMovies.png)
+![Architeture](app/diagramMovies.png)
 
 We have four main layers, API, Service, Repository and Models. Our models are:
   - Movie
@@ -24,13 +24,15 @@ To run this project its pretty easy. You just have to have docker installed on y
 To start the **spring boot** server and **mysql**.
 
 ```shell
-docker-compose -f docker/docker-compose.shared.yml up
+cd movies
+docker-compose -f docker-compose.dev.yml run app
 ```
 
-To run all tests (NOT WORKING YET)
+To run all tests
 
 ```shell
-docker-compose -f docker/docker-compose.shared.yml exec spring-boot mvn test
+cd movies
+docker-compose -f docker-compose.test.yml run app
 ```
 
 ## Swagger
