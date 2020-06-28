@@ -9,20 +9,12 @@ import com.donus.movies.model.repository.PeopleRepository;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.sun.istack.NotNull;
 import lombok.Data;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Data
 public class MovieRequest {
-  @Autowired
-  private PeopleRepository peopleRepository;
-
-  private Long id;
-
   private String title;
 
   @JsonFormat(pattern="yyyy-MM-dd")

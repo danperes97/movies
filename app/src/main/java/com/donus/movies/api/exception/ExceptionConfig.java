@@ -22,7 +22,8 @@ public class ExceptionConfig extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler({
-        ObjectNotFoundException.class
+        ObjectNotFoundException.class,
+        EmptyResultDataAccessException.class
     })
     public ResponseEntity resourceNotFound(Exception ex) {
         return ResponseEntity.notFound().build();

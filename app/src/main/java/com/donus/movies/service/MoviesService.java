@@ -2,18 +2,14 @@ package com.donus.movies.service;
 
 import com.donus.movies.api.request.MovieRequest;
 import com.donus.movies.model.Movie;
-import com.donus.movies.model.Person;
 import com.donus.movies.model.dto.MovieDTO;
 import com.donus.movies.model.exception.AlreadyExistsException;
-import com.donus.movies.model.exception.CreationObjectNotFoundException;
 import com.donus.movies.model.exception.ObjectNotFoundException;
 import com.donus.movies.model.repository.MoviesRepository;
 import com.donus.movies.model.repository.PeopleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.donus.movies.model.exception.ValidationException;
 import org.springframework.util.Assert;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;

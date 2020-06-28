@@ -1,7 +1,6 @@
 package com.donus.movies.api;
 
 import com.donus.movies.api.request.MovieRequest;
-import com.donus.movies.model.Movie;
 import com.donus.movies.model.dto.MovieDTO;
 import com.donus.movies.service.MoviesService;
 import org.springframework.beans.factory.annotation.Autowired;
