@@ -3,7 +3,6 @@ package com.donus.movies.api;
 import com.donus.movies.MoviesApplication;
 import com.donus.movies.model.Person;
 import com.donus.movies.model.dto.PersonDTO;
-import com.donus.movies.service.PeopleService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,9 +25,6 @@ public class PeopleControllerTest {
   @Autowired
   protected TestRestTemplate rest;
 
-  @Autowired
-  private PeopleService service;
-
   private ResponseEntity<PersonDTO> getPerson(String url) {
     return rest.getForEntity(url, PersonDTO.class);
   }
@@ -45,7 +41,6 @@ public class PeopleControllerTest {
   public void testSave() {
     Person personFixture = new Person("Chris Evans");
 
-    // Insert
     ResponseEntity response = rest.postForEntity("/api/v1/people", personFixture, null);
     assertEquals(HttpStatus.CREATED, response.getStatusCode());
 
@@ -57,8 +52,40 @@ public class PeopleControllerTest {
   }
 
   @Test
+  public void testUpdate() {
+    Person personFixture = new Person("Chris Evans");
+
+    ResponseEntity response = rest.postForEntity("/api/v1/people", personFixture, null);
+    assertEquals(HttpStatus.CREATED, response.getStatusCode());
+
+    String location = response.getHeaders().get("location").get(0);
+    PersonDTO person = getPerson(location).getBody();
+
+    assertNotNull(person);
+    assertEquals("Chris Evans", person.getName());
+
+    person.setName("Chris Evans Updated");
+
+    rest.put("/api/v1/people/1", person);
+    PersonDTO personUpdated = getPerson(location).getBody();
+
+    assertNotNull(personUpdated);
+    assertEquals("Chris Evans Updated", personUpdated.getName());
+  }
+
+  @Test
+  public void testDeleteMovie() {
+    Person personFixture = new Person("Chris Evans");
+    rest.postForEntity("/api/v1/people", personFixture, null);
+
+    rest.delete("/api/v1/people/1");
+    ResponseEntity response = getPerson("/api/v1/people/1");
+    assertEquals(response.getStatusCode(), HttpStatus.NOT_FOUND);
+  }
+
+  @Test
   public void testList() {
-    ResponseEntity response = rest.postForEntity("/api/v1/people", new Person("Chris Evans"), null);
+    rest.postForEntity("/api/v1/people", new Person("Chris Evans"), null);
     List<PersonDTO> people = getPeople("/api/v1/people").getBody();
     assertNotNull(people);
   }
