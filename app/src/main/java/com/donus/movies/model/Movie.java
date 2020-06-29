@@ -36,12 +36,11 @@ public class Movie {
   private Long directorId;
 
   @Column
-  @Size(message = "Cast should'nt have more than 10!", max = 10)
-//  @NotNull(message = "Cast is mandatory!")
-  @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+  @ManyToMany(fetch = FetchType.EAGER)
   @JoinTable(name = "movie_cast",
-      joinColumns = @JoinColumn(name = "movie_id", referencedColumnName = "id"),
-      inverseJoinColumns = @JoinColumn(name = "person_id", referencedColumnName = "id")
+      joinColumns = @JoinColumn(name = "movie_id", referencedColumnName = "id", insertable = false, updatable = false),
+      inverseJoinColumns = @JoinColumn(name = "person_id", referencedColumnName = "id", insertable = false, updatable = false)
   )
   private List<Person> cast;
+
 }

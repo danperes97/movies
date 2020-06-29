@@ -27,17 +27,13 @@ public class MoviesService {
   }
 
   public MovieDTO save(MovieRequest movieRequest) {
-    Movie movie = movieRequestToMovie(movieRequest);
+    Movie movie = movieRequest.toMovie();
 
     if(findMovieByName(movie.getTitle()).isPresent()) {
       throw new AlreadyExistsException("This movie already exists");
     } else {
       return MovieDTO.create(repository.save(movie));
     }
-  }
-
-  private Movie movieRequestToMovie(MovieRequest movieRequest) {
-    return movieRequest.toMovie(peopleRepository);
   }
 
   public MovieDTO update(Long id, MovieRequest movieRequest) {

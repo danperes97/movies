@@ -3,7 +3,6 @@ package com.donus.movies.api;
 import com.donus.movies.MoviesApplication;
 import com.donus.movies.model.Person;
 import com.donus.movies.model.dto.PersonDTO;
-import com.donus.movies.model.repository.PeopleRepository;
 import com.donus.movies.service.PeopleService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -39,8 +38,7 @@ public class PeopleControllerTest {
         url,
         HttpMethod.GET,
         null,
-        new ParameterizedTypeReference<List<PersonDTO>>() {
-        });
+        new ParameterizedTypeReference<List<PersonDTO>>() {});
   }
 
   @Test

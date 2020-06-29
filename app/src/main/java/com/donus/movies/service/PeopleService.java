@@ -21,11 +21,11 @@ public class PeopleService {
     return listToPersonDTO(repository.findAll());
   }
 
-  public PersonDTO save(Person person) {
-    if(findPersonByName(person.getName()).isPresent()) {
+  public PersonDTO save(Person personRequest) {
+    if(findPersonByName(personRequest.getName()).isPresent()) {
       throw new AlreadyExistsException("This person already exists");
     } else {
-      return PersonDTO.create(repository.save(person));
+      return PersonDTO.create(repository.save(personRequest));
     }
   }
 

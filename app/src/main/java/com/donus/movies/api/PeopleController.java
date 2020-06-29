@@ -27,8 +27,8 @@ public class PeopleController {
   }
 
   @PostMapping
-  public ResponseEntity post(@RequestBody Person person) {
-    PersonDTO personSaved = service.save(person);
+  public ResponseEntity post(@RequestBody Person personRequest) {
+    PersonDTO personSaved = service.save(personRequest);
     URI location = getUri(personSaved.getId());
 
     return ResponseEntity.created(location).build();

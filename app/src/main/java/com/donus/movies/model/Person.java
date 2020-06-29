@@ -15,9 +15,22 @@ public class Person {
   @NotNull(message = "Name is mandatory!")
   private String name;
 
-  public Person(String name) {
-    this.name = name;
-  }
+  public Person(String name) { this.name = name; }
 
   public Person(){}
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+
+    Person person = (Person) o;
+
+    return id.equals(person.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return id.hashCode();
+  }
 }

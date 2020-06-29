@@ -3,7 +3,6 @@ package com.donus.movies.service;
 import com.donus.movies.api.request.MovieRequest;
 import com.donus.movies.model.Movie;
 import com.donus.movies.model.Person;
-import com.donus.movies.model.dto.MovieDTO;
 import com.donus.movies.model.exception.AlreadyExistsException;
 import com.donus.movies.model.repository.PeopleRepository;
 import org.junit.Test;
@@ -15,6 +14,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -34,7 +34,7 @@ public class MovieServiceTest {
 		peopleRepository.save(new Person("Robert Downey Jr"));
 
 		MovieRequest movieRequest = new MovieRequest();
-//    movieRequest.setCast(Arrays.asList(1L, 2L));
+    movieRequest.setCast(Arrays.asList(1L, 2L));
     movieRequest.setCensured(false);
     movieRequest.setDirectorId(1L);
     movieRequest.setTitle(movieName);
@@ -51,9 +51,10 @@ public class MovieServiceTest {
 
 	  Optional<Movie> movie = moviesService.findMovieByName(movieRequest.getTitle());
 	  assertEquals(movieRequest.getTitle(), movie.get().getTitle());
-	assertEquals(movieRequest.getDirectorId(), movie.get().getDirector().getId());
+		assertEquals(movieRequest.getDirectorId(), movie.get().getDirector().getId());
 		assertEquals(movieRequest.getCensured(), movie.get().getCensured());
 		assertEquals(movieRequest.getReleaseDate(), movie.get().getReleaseDate());
+		assertEquals(movie.get().getCast().stream().map(p -> p.getName()).collect(Collectors.toList()), Arrays.asList("Chris Evans", "Robert Downey Jr"));
   }
 
   @Test
