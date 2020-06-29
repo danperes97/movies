@@ -4,8 +4,8 @@ import com.donus.movies.api.request.MovieRequest;
 import com.donus.movies.model.Movie;
 import com.donus.movies.model.Person;
 import com.donus.movies.model.exception.AlreadyExistsException;
+import com.donus.movies.model.exception.ObjectNotFoundException;
 import com.donus.movies.model.repository.PeopleRepository;
-import org.hibernate.exception.ConstraintViolationException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,13 +13,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import javax.validation.ConstraintViolationException;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 @RunWith(SpringRunner.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -60,6 +61,34 @@ public class MovieServiceTest {
   }
 
   @Test
+	public void updateMovieTest() {
+  	MovieRequest movieRequest = setupMovie("Avengers");
+		moviesService.save(movieRequest);
+
+	  Movie movie = moviesService.findMovieByName(movieRequest.getTitle()).get();
+	  assertEquals(movieRequest.getTitle(), movie.getTitle());
+
+	  movieRequest.setTitle("Avengers Updated");
+
+	  moviesService.update(movie.getId(), movieRequest);
+	  Movie movieUpdated = moviesService.findMovieByName(movieRequest.getTitle()).get();
+	  assertEquals(movieUpdated.getTitle(), "Avengers Updated");
+  }
+
+  @Test
+	public void deleteMovieTest() {
+  	MovieRequest movieRequest = setupMovie("Avengers");
+		moviesService.save(movieRequest);
+
+	  Movie movie = moviesService.findMovieByName(movieRequest.getTitle()).get();
+		moviesService.deleteMovieById(movie.getId());
+
+		assertThrows(ObjectNotFoundException.class, () -> {
+			moviesService.findMovieById(movie.getId());
+		});
+  }
+
+  @Test
 	public void createWithSameTitleMovieTest() {
   	MovieRequest movieRequest = setupMovie("Avengers");
   	MovieRequest movie2Request = setupMovie("Avengers");
@@ -67,6 +96,16 @@ public class MovieServiceTest {
 		moviesService.save(movieRequest);
 		assertThrows(AlreadyExistsException.class, () -> {
 			moviesService.save(movie2Request);
+		});
+  }
+
+  @Test
+	public void createMovieWithMoreThanTenCastTest() {
+  	MovieRequest movieRequest = setupMovie("Avengers");
+  	movieRequest.setCast(Arrays.asList(1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L));
+
+		assertThrows(ConstraintViolationException.class, () -> {
+			moviesService.save(movieRequest);
 		});
   }
   

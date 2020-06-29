@@ -79,6 +79,56 @@ public class MoviesControllerTest {
     }
 
     @Test
+    public void testUpdate() {
+        MovieRequest movieRequest = setupMovie("Avengers");
+
+        ResponseEntity response = rest.postForEntity("/api/v1/movies", movieRequest, null);
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+
+        String location = response.getHeaders().get("location").get(0);
+        MovieDTO movie = getMovie(location).getBody();
+
+        assertNotNull(movie);
+        assertEquals("Avengers", movie.getTitle());
+
+        movieRequest.setTitle("Avengers Updated");
+
+        rest.put("/api/v1/movies/1", movieRequest);
+        MovieDTO movieUpdated = getMovie(location).getBody();
+
+        assertNotNull(movieUpdated);
+        assertEquals("Avengers Updated", movieUpdated.getTitle());
+    }
+
+    @Test
+    public void testSaveWithNonexistentCast() {
+        MovieRequest movieRequest = setupMovie("Avengers");
+        movieRequest.setCast(Arrays.asList(10000000L));
+
+        ResponseEntity response = rest.postForEntity("/api/v1/movies", movieRequest, null);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+    }
+
+    @Test
+    public void testSaveWithNonexistentDirector() {
+        MovieRequest movieRequest = setupMovie("Avengers");
+  	    movieRequest.setDirectorId(100000L);
+
+        ResponseEntity response = rest.postForEntity("/api/v1/movies", movieRequest, null);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+    }
+
+    @Test
+    public void testDeleteMovie() {
+        MovieRequest movieRequest = setupMovie("Avengers");
+        rest.postForEntity("/api/v1/movies", movieRequest, null);
+
+        rest.delete("/api/v1/movies/1");
+        ResponseEntity response = getMovie("/api/v1/movies/1");
+        assertEquals(response.getStatusCode(), HttpStatus.NOT_FOUND);
+    }
+
+    @Test
     public void testList() {
         List<MovieDTO> movies = getMovies("/api/v1/movies").getBody();
         assertNotNull(movies);

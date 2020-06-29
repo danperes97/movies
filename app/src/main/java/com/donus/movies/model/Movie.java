@@ -37,6 +37,8 @@ public class Movie {
 
   @Column
   @ManyToMany(fetch = FetchType.EAGER)
+  @Size(max = 10, message = "Cast should'nt be bigger than 10!")
+  @NotNull(message = "Cast is mandatory!")
   @JoinTable(name = "movie_cast",
       joinColumns = @JoinColumn(name = "movie_id", referencedColumnName = "id", insertable = false, updatable = false),
       inverseJoinColumns = @JoinColumn(name = "person_id", referencedColumnName = "id", insertable = false, updatable = false)
