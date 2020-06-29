@@ -1,6 +1,6 @@
 # Movie API
 
-This is an application written in Java, using Spring Boot. All application is dockerized.
+This is an application written in Java, using Spring Boot.
 
 ## Architeture
 
