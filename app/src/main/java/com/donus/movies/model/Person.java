@@ -1,5 +1,6 @@
 package com.donus.movies.model;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -10,6 +11,7 @@ import javax.validation.constraints.NotNull;
 public class Person {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @ApiModelProperty(hidden = true)
   private Long id;
 
   @NotNull(message = "Name is mandatory!")

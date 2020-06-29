@@ -10,13 +10,15 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import javax.validation.ConstraintViolationException;
+import java.sql.SQLIntegrityConstraintViolationException;
 
 @RestControllerAdvice
 public class ExceptionConfig extends ResponseEntityExceptionHandler {
     @ExceptionHandler({
         AlreadyExistsException.class,
         CreationObjectNotFoundException.class,
-        ConstraintViolationException.class
+        ConstraintViolationException.class,
+        SQLIntegrityConstraintViolationException.class
     })
     public ResponseEntity badRequest(Exception ex) {
         return ResponseEntity.badRequest().body(new ErrorObject(ex.getMessage()));

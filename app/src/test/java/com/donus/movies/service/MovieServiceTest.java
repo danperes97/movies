@@ -5,10 +5,12 @@ import com.donus.movies.model.Movie;
 import com.donus.movies.model.Person;
 import com.donus.movies.model.exception.AlreadyExistsException;
 import com.donus.movies.model.repository.PeopleRepository;
+import org.hibernate.exception.ConstraintViolationException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 import java.util.Arrays;
@@ -65,6 +67,26 @@ public class MovieServiceTest {
 		moviesService.save(movieRequest);
 		assertThrows(AlreadyExistsException.class, () -> {
 			moviesService.save(movie2Request);
+		});
+  }
+  
+  @Test
+	public void createWithNonexistentCast() {
+  	MovieRequest movieRequest = setupMovie("Avengers");
+  	movieRequest.setCast(Arrays.asList(10000000L));
+
+		assertThrows(DataIntegrityViolationException.class, () -> {
+			moviesService.save(movieRequest);
+		});
+  }
+
+  @Test
+	public void createWithNonexistentDirector() {
+  	MovieRequest movieRequest = setupMovie("Avengers");
+  	movieRequest.setDirectorId(100000L);
+
+		assertThrows(DataIntegrityViolationException.class, () -> {
+			moviesService.save(movieRequest);
 		});
   }
 }
