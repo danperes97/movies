@@ -2,6 +2,7 @@ package com.donus.movies.api;
 
 import com.donus.movies.MoviesApplication;
 import com.donus.movies.api.request.MovieRequest;
+import com.donus.movies.model.Movie;
 import com.donus.movies.model.Person;
 import com.donus.movies.model.dto.MovieDTO;
 import com.donus.movies.model.repository.PeopleRepository;
@@ -42,11 +43,15 @@ public class MoviesControllerTest {
 
     private ResponseEntity<List<MovieDTO>> getMovies(String url) {
         return rest.exchange(
-                url,
-                HttpMethod.GET,
-                null,
-                new ParameterizedTypeReference<List<MovieDTO>>() {
-                });
+            url,
+            HttpMethod.GET,
+            null,
+            new ParameterizedTypeReference<List<MovieDTO>>() {}
+        );
+    }
+
+    private ResponseEntity postMovie(MovieRequest movieRequest) {
+        return rest.postForEntity("/api/v1/movies", movieRequest, null);
     }
 
     private MovieRequest setupMovie(String movieName){
@@ -61,14 +66,13 @@ public class MoviesControllerTest {
         movieRequest.setReleaseDate(new Date());
 
         return movieRequest;
-	  }
+    }
 
     @Test
     public void testSave() {
         MovieRequest movieRequest = setupMovie("Avengers");
 
-        // Insert
-        ResponseEntity response = rest.postForEntity("/api/v1/movies", movieRequest, null);
+        ResponseEntity response = postMovie(movieRequest);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
 
         String location = response.getHeaders().get("location").get(0);
@@ -82,7 +86,7 @@ public class MoviesControllerTest {
     public void testUpdate() {
         MovieRequest movieRequest = setupMovie("Avengers");
 
-        ResponseEntity response = rest.postForEntity("/api/v1/movies", movieRequest, null);
+        ResponseEntity response = postMovie(movieRequest);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
 
         String location = response.getHeaders().get("location").get(0);
@@ -105,7 +109,7 @@ public class MoviesControllerTest {
         MovieRequest movieRequest = setupMovie("Avengers");
         movieRequest.setCast(Arrays.asList(10000000L));
 
-        ResponseEntity response = rest.postForEntity("/api/v1/movies", movieRequest, null);
+        ResponseEntity response = postMovie(movieRequest);
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
 
@@ -114,14 +118,14 @@ public class MoviesControllerTest {
         MovieRequest movieRequest = setupMovie("Avengers");
   	    movieRequest.setDirectorId(100000L);
 
-        ResponseEntity response = rest.postForEntity("/api/v1/movies", movieRequest, null);
+        ResponseEntity response = postMovie(movieRequest);
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
 
     @Test
     public void testDeleteMovie() {
         MovieRequest movieRequest = setupMovie("Avengers");
-        rest.postForEntity("/api/v1/movies", movieRequest, null);
+        postMovie(movieRequest);
 
         rest.delete("/api/v1/movies/1");
         ResponseEntity response = getMovie("/api/v1/movies/1");
@@ -137,7 +141,7 @@ public class MoviesControllerTest {
     @Test
     public void testGetOk() {
         MovieRequest movieRequest = setupMovie("Avengers");
-        rest.postForEntity("/api/v1/movies", movieRequest, null);
+        postMovie(movieRequest);
 
         ResponseEntity<MovieDTO> response = getMovie("/api/v1/movies/1");
         assertEquals(response.getStatusCode(), HttpStatus.OK);

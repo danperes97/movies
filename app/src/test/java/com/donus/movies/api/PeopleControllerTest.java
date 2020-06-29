@@ -37,11 +37,15 @@ public class PeopleControllerTest {
         new ParameterizedTypeReference<List<PersonDTO>>() {});
   }
 
+  private ResponseEntity postPerson(Person person) {
+        return rest.postForEntity("/api/v1/people", person, null);
+    }
+
   @Test
   public void testSave() {
     Person personFixture = new Person("Chris Evans");
 
-    ResponseEntity response = rest.postForEntity("/api/v1/people", personFixture, null);
+    ResponseEntity response = postPerson(personFixture);
     assertEquals(HttpStatus.CREATED, response.getStatusCode());
 
     String location = response.getHeaders().get("location").get(0);
@@ -55,7 +59,7 @@ public class PeopleControllerTest {
   public void testUpdate() {
     Person personFixture = new Person("Chris Evans");
 
-    ResponseEntity response = rest.postForEntity("/api/v1/people", personFixture, null);
+    ResponseEntity response = postPerson(personFixture);
     assertEquals(HttpStatus.CREATED, response.getStatusCode());
 
     String location = response.getHeaders().get("location").get(0);
@@ -76,7 +80,7 @@ public class PeopleControllerTest {
   @Test
   public void testDeleteMovie() {
     Person personFixture = new Person("Chris Evans");
-    rest.postForEntity("/api/v1/people", personFixture, null);
+    postPerson(personFixture);
 
     rest.delete("/api/v1/people/1");
     ResponseEntity response = getPerson("/api/v1/people/1");
@@ -85,14 +89,14 @@ public class PeopleControllerTest {
 
   @Test
   public void testList() {
-    rest.postForEntity("/api/v1/people", new Person("Chris Evans"), null);
+    postPerson(new Person("Chris Evans"));
     List<PersonDTO> people = getPeople("/api/v1/people").getBody();
     assertNotNull(people);
   }
 
   @Test
   public void testGetOk() {
-    rest.postForEntity("/api/v1/people", new Person("Chris Evans"), null);
+    postPerson(new Person("Chris Evans"));
 
     ResponseEntity<PersonDTO> response = getPerson("/api/v1/people/1");
     assertEquals(response.getStatusCode(), HttpStatus.OK);
