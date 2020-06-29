@@ -36,7 +36,7 @@ public class MovieServiceTest {
 		MovieRequest movieRequest = new MovieRequest();
 //    movieRequest.setCast(Arrays.asList(1L, 2L));
     movieRequest.setCensured(false);
-//    movieRequest.setDirectorId(1L);
+    movieRequest.setDirectorId(1L);
     movieRequest.setTitle(movieName);
     movieRequest.setReleaseDate(new Date());
 
@@ -51,7 +51,7 @@ public class MovieServiceTest {
 
 	  Optional<Movie> movie = moviesService.findMovieByName(movieRequest.getTitle());
 	  assertEquals(movieRequest.getTitle(), movie.get().getTitle());
-//	assertEquals(movieRequest.getDirectorId(), movie.getDirector().getId());
+	assertEquals(movieRequest.getDirectorId(), movie.get().getDirector().getId());
 		assertEquals(movieRequest.getCensured(), movie.get().getCensured());
 		assertEquals(movieRequest.getReleaseDate(), movie.get().getReleaseDate());
   }

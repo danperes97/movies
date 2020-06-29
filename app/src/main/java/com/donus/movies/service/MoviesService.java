@@ -37,7 +37,7 @@ public class MoviesService {
   }
 
   private Movie movieRequestToMovie(MovieRequest movieRequest) {
-    return movieRequest.toMovie();
+    return movieRequest.toMovie(peopleRepository);
   }
 
   public MovieDTO update(Long id, MovieRequest movieRequest) {
